@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  banking:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: banking
+    restart: always
+    labels:
+      - coolify.managed=true
+      - coolify.version=4.0.0-beta.297
+      - coolify.serviceId=30
+      - coolify.type=service
+      - coolify.name=banking-service
+      - coolify.pullRequestId=0
+      - coolify.service.subId=113
+      - coolify.service.subType=application
+      - traefik.enable=true
+      - traefik.http.middlewares.gzip.compress=true
+      - traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
+      - traefik.http.routers.http-banking.entryPoints=http
+      - traefik.http.routers.http-banking.middlewares=redirect-to-https
+      - 'traefik.http.routers.http-banking.rule=Host(`banking.copilotforsellers.com`) && PathPrefix(`/`)'
+      - traefik.http.routers.http-banking.service=http-banking
+      - traefik.http.routers.https-banking.entryPoints=https
+      - 'traefik.http.routers.https-banking.middlewares=gzip'
+      - 'traefik.http.routers.https-banking.rule=Host(`banking.copilotforsellers.com`) && PathPrefix(`/`)'
+      - traefik.http.routers.https-banking.service=https-banking
+      - traefik.http.routers.https-banking.tls.certresolver=letsencrypt
+      - traefik.http.routers.https-banking.tls=true
+      - traefik.http.services.http-banking.loadbalancer.server.port=80
+      - traefik.http.services.https-banking.loadbalancer.server.port=80
