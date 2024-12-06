@@ -1,0 +1,495 @@
+<html><head><base href="https://html5css3.web.app/">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Banking Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+    
+        body {
+            background: #f0f2f5;
+        }
+    
+        .header {
+            background: #1a237e;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+    
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+    
+        .account-info {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+    
+        .balance {
+            font-size: 2.5rem;
+            color: #1a237e;
+            margin: 1rem 0;
+        }
+    
+        .transactions {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-height: 600px;
+            overflow-y: auto;
+        }
+    
+        .transaction {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+    
+        .transaction:hover {
+            transform: scale(1.01);
+        }
+    
+        .credit { color: #4CAF50; }
+        .debit { color: #f44336; }
+        .date { color: #666; font-size: 0.9rem; }
+    
+        .nav {
+            background: #283593;
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+    
+        .nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+    
+        .nav a:hover {
+            background: #1a237e;
+        }
+    
+        .spotify-icon {
+            width: 24px;
+            height: 24px;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+    
+        .filter-buttons {
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 1rem;
+        }
+    
+        .filter-button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            background: #283593;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+    
+        .filter-button:hover {
+            background: #1a237e;
+        }
+    
+        .transaction-detail {
+            display: none;
+            padding: 1rem;
+            background: #f8f9fa;
+            margin-top: 0.5rem;
+            border-radius: 5px;
+        }
+    
+        .transfer-form, .settings-panel {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: none;
+        }
+    
+        .form-group {
+            margin-bottom: 1rem;
+        }
+    
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+    
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+    
+        .submit-button {
+            background: #1a237e;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
+    
+        .submit-button:hover {
+            background: #283593;
+        }
+    
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+    </style>
+    </head>
+    <body>
+        <div class="header">
+            <h1>SecureBank Online</h1>
+        </div>
+        <div class="nav">
+            <a href="#" onclick="showSection('main')">Home</a>
+            <a href="#" onclick="showSection('transfer')">Überweisungen</a>
+            <a href="#" onclick="showSection('settings')">Einstellungen</a>
+        </div>
+    
+        <div class="container">
+            <!-- Main Section -->
+            <div id="main-section">
+                <div class="account-info fade-in">
+                    <h2>Girokonto - DE89 3704 0044 0532 0130 00</h2>
+                    <div class="balance">€198.459,32</div>
+                    <p>Verfügbarer Betrag</p>
+                </div>
+    
+                <div class="filter-buttons">
+                    <button class="filter-button" data-year="all">Alle Transaktionen</button>
+                    <button class="filter-button" data-year="2024">2024</button>
+                    <button class="filter-button" data-year="2023">2023</button>
+                    <button class="filter-button" data-type="luxury">Luxus Einkäufe</button>
+                </div>
+    
+                <div class="transactions fade-in">
+                    <h3>Letzte Transaktionen</h3>
+                    <div id="transactions-list">
+                        <div class="transaction" data-year="2024">
+                            <div>
+                                <svg class="spotify-icon" viewBox="0 0 24 24">
+                                    <path fill="#1DB954" d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+                                </svg>
+                                <span>Spotify Streaming Bonus Q1</span>
+                                <span class="date">15.01.2024</span>
+                            </div>
+                            <span class="credit">+ €71.000,00</span>
+                        </div>
+                        <div class="transaction" data-year="2024">
+                            <div>
+                                <span>Restaurant Maya</span>
+                                <span class="date">14.01.2024</span>
+                            </div>
+                            <span class="debit">- €45,90</span>
+                        </div>
+                        <div class="transaction" data-year="2024">
+                            <div>
+                                <span>Tanken Shell</span>
+                                <span class="date">13.01.2024</span>
+                            </div>
+                            <span class="debit">- €65,43</span>
+                        </div>
+                        <div class="transaction" data-year="2024">
+                            <div>
+                                <svg class="spotify-icon" viewBox="0 0 24 24">
+                                    <path fill="#1DB954" d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+                                </svg>
+                                <span>Spotify Werbeeinnahmen</span>
+                                <span class="date">12.01.2024</span>
+                            </div>
+                            <span class="credit">+ €12.450,00</span>
+                        </div>
+                        <div class="transaction" data-year="2024">
+                            <div>
+                                <span>Rewe Einkauf</span>
+                                <span class="date">10.01.2024</span>
+                            </div>
+                            <span class="debit">- €87,65</span>
+                        </div>
+                        <div class="transaction" data-year="2023">
+                            <div>
+                                <svg class="spotify-icon" viewBox="0 0 24 24">
+                                    <path fill="#1DB954" d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+                                </svg>
+                                <span>Spotify Jahresendbonus</span>
+                                <span class="date">20.12.2023</span>
+                            </div>
+                            <span class="credit">+ €55.892,50</span>
+                        </div>
+                        <div class="transaction" data-year="2023">
+                            <div>
+                                <svg class="spotify-icon" viewBox="0 0 24 24">
+                                    <path fill="#1DB954" d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+                                </svg>
+                                <span>Spotify Streaming Einnahmen</span>
+                                <span class="date">15.12.2023</span>
+                            </div>
+                            <span class="credit">+ €38.567,21</span>
+                        </div>
+                        <div class="transaction" data-year="2023">
+                            <div>
+                                <span>Saturn Elektronik</span>
+                                <span class="date">10.12.2023</span>
+                            </div>
+                            <span class="debit">- €899,99</span>
+                        </div>
+                        <div class="transaction" data-year="2023">
+                            <div>
+                                <span>Amazon Prime</span>
+                                <span class="date">28.05.2023</span>
+                            </div>
+                            <span class="debit">- €7,99</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Transfer Form -->
+            <div id="transfer-section" class="transfer-form fade-in">
+                <h2>Neue Überweisung</h2>
+                <form id="transfer-form" onsubmit="handleTransfer(event)">
+                    <div class="form-group">
+                        <label for="recipient-name">Empfängername</label>
+                        <input type="text" id="recipient-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="iban">IBAN</label>
+                        <input type="text" id="iban" pattern="DE[0-9]{20}" placeholder="DE..." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="amount">Betrag (€)</label>
+                        <input type="number" id="amount" min="0.01" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="purpose">Verwendungszweck</label>
+                        <input type="text" id="purpose" required>
+                    </div>
+                    <button type="submit" class="submit-button">Überweisung ausführen</button>
+                </form>
+            </div>
+    
+            <!-- Settings Panel -->
+            <div id="settings-section" class="settings-panel fade-in">
+                <h2>Einstellungen</h2>
+                <div class="form-group">
+                    <label>Benutzername</label>
+                    <input type="text" value="colly light" readonly>
+                </div>
+                <div class="form-group">
+                    <label>E-Mail</label>
+                    <input type="email" value="colly.light@example.com" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Letzter Login</label>
+                    <input type="text" value="15.01.2024 14:30" readonly>
+                </div>
+            </div>
+        </div>
+    
+        <script>
+            // Transaction data
+            const transactions2024 = [
+                { date: "01.11.2024", description: "Spotify Royalties", amount: 35483.47, type: "credit", spotify: true },
+                { date: "01.11.2024", description: "rickowens.eu", amount: 4512.34, type: "debit" },
+                { date: "02.11.2024", description: "farfetch.com", amount: 1289.12, type: "debit" },
+                { date: "03.11.2024", description: "balenciaga.com", amount: 1523.67, type: "debit" },
+                { date: "04.11.2024", description: "louisvuitton.com", amount: 3834.89, type: "debit" },
+                { date: "04.11.2024", description: "Spotify Ad Boost", amount: 4975.55, type: "debit", spotify: true },
+                { date: "05.11.2024", description: "net-a-porter.com", amount: 612.43, type: "debit" },
+                { date: "06.11.2024", description: "Spotify Royalties", amount: 10238.21, type: "credit", spotify: true },
+                { date: "07.11.2024", description: "rickowens.eu", amount: 2035.76, type: "debit" },
+                { date: "07.11.2024", description: "Private Jet Booking", amount: 8442.67, type: "debit" },
+                { date: "08.11.2024", description: "balenciaga.com", amount: 2327.90, type: "debit" },
+                { date: "09.11.2024", description: "Apple Music Royalties", amount: 14772.34, type: "credit" },
+                { date: "10.11.2024", description: "farfetch.com", amount: 4243.11, type: "debit" },
+                { date: "11.11.2024", description: "rickowens.eu", amount: 1453.92, type: "debit" },
+                { date: "12.11.2024", description: "gucci.com", amount: 713.54, type: "debit" },
+                { date: "13.11.2024", description: "net-a-porter.com", amount: 915.28, type: "debit" },
+                { date: "14.11.2024", description: "Studio Rental", amount: 3037.88, type: "debit" },
+                { date: "15.11.2024", description: "balenciaga.com", amount: 5987.29, type: "debit" },
+                { date: "16.11.2024", description: "farfetch.com", amount: 12113.44, type: "debit" },
+                { date: "17.11.2024", description: "Spotify Royalties", amount: 40227.09, type: "credit", spotify: true },
+                { date: "18.11.2024", description: "rickowens.eu", amount: 2817.63, type: "debit" },
+                { date: "19.11.2024", description: "balenciaga.com", amount: 1742.51, type: "debit" },
+                { date: "20.11.2024", description: "net-a-porter.com", amount: 1157.38, type: "debit" },
+                { date: "21.11.2024", description: "farfetch.com", amount: 5432.26, type: "debit" },
+                { date: "22.11.2024", description: "louisvuitton.com", amount: 4078.49, type: "debit" },
+                { date: "23.11.2024", description: "Apple Music Royalties", amount: 24538.92, type: "credit" },
+                { date: "24.11.2024", description: "Private Chef Service", amount: 2487.63, type: "debit" },
+                { date: "25.11.2024", description: "rickowens.eu", amount: 912.47, type: "debit" },
+                { date: "26.11.2024", description: "Spotify Playlist Promotion", amount: 7004.71, type: "debit", spotify: true },
+                { date: "27.11.2024", description: "balenciaga.com", amount: 5811.38, type: "debit" },
+                { date: "28.11.2024", description: "farfetch.com", amount: 3238.94, type: "debit" },
+                { date: "29.11.2024", description: "net-a-porter.com", amount: 1028.17, type: "debit" },
+                { date: "30.11.2024", description: "Studio Equipment", amount: 9994.62, type: "debit" },
+                { date: "01.12.2024", description: "Spotify Royalties", amount: 29774.82, type: "credit", spotify: true },
+                { date: "02.12.2024", description: "rickowens.eu", amount: 608.49, type: "debit" },
+                { date: "03.12.2024", description: "balenciaga.com", amount: 1438.72, type: "debit" },
+                { date: "04.12.2024", description: "louisvuitton.com", amount: 3467.90, type: "debit" },
+                { date: "05.12.2024", description: "farfetch.com", amount: 3822.41, type: "debit" },
+                { date: "06.12.2024", description: "Private Security", amount: 4049.88, type: "debit" },
+                { date: "07.12.2024", description: "rickowens.eu", amount: 3954.27, type: "debit" },
+                { date: "08.12.2024", description: "Spotify Playlist Boost", amount: 6589.33, type: "debit", spotify: true },
+                { date: "09.12.2024", description: "Apple Music Royalties", amount: 18325.76, type: "credit" },
+                { date: "10.12.2024", description: "net-a-porter.com", amount: 729.61, type: "debit" },
+                { date: "11.12.2024", description: "farfetch.com", amount: 2029.55, type: "debit" },
+                { date: "12.12.2024", description: "balenciaga.com", amount: 2322.48, type: "debit" },
+                { date: "13.12.2024", description: "Studio Fee", amount: 2518.73, type: "debit" },
+                { date: "14.12.2024", description: "rickowens.eu", amount: 1784.37, type: "debit" },
+                { date: "15.12.2024", description: "farfetch.com", amount: 2212.16, type: "debit" }
+            ];
+    
+            const transactions2023 = [
+                { date: "20.12.2023", description: "Spotify Jahresendbonus", amount: 55892.50, type: "credit", spotify: true },
+                { date: "15.12.2023", description: "Spotify Streaming Einnahmen", amount: 38567.21, type: "credit", spotify: true },
+                { date: "10.12.2023", description: "Saturn Elektronik", amount: 899.99, type: "debit" },
+                { date: "28.05.2023", description: "Amazon Prime", amount: 7.99, type: "debit" }
+            ];
+    
+            function showSection(section) {
+                document.getElementById('main-section').style.display = 'none';
+                document.getElementById('transfer-section').style.display = 'none';
+                document.getElementById('settings-section').style.display = 'none';
+    
+                switch(section) {
+                    case 'main':
+                        document.getElementById('main-section').style.display = 'block';
+                        break;
+                    case 'transfer':
+                        document.getElementById('transfer-section').style.display = 'block';
+                        break;
+                    case 'settings':
+                        document.getElementById('settings-section').style.display = 'block';
+                        break;
+                }
+            }
+    
+            function handleTransfer(event) {
+                event.preventDefault();
+                const formData = {
+                    recipient: document.getElementById('recipient-name').value,
+                    iban: document.getElementById('iban').value,
+                    amount: document.getElementById('amount').value,
+                    purpose: document.getElementById('purpose').value
+                };
+                
+                alert('Überweisung erfolgreich ausgeführt!');
+                event.target.reset();
+                showSection('main');
+            }
+    
+            function renderTransactions() {
+                const transactionsList = document.getElementById('transactions-list');
+                const allTransactions = [...transactions2024, ...transactions2023];
+                
+                transactionsList.innerHTML = allTransactions.map(t => `
+                    <div class="transaction" data-year="${t.date.split('.')[2]}">
+                        <div>
+                            ${t.spotify ? `
+                                <svg class="spotify-icon" viewBox="0 0 24 24">
+                                    <path fill="#1DB954" d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+                                </svg>
+                            ` : ''}
+                            <span>${t.description}</span>
+                            <span class="date">${t.date}</span>
+                        </div>
+                        <span class="${t.type}">${t.type === 'credit' ? '+' : '-'} €${t.amount.toFixed(2)}</span>
+                    </div>
+                `).join('');
+            }
+    
+            // Initialize page
+            showSection('main');
+            renderTransactions();
+    
+            // Filter functionality
+            document.querySelectorAll('.filter-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    const year = button.dataset.year;
+                    const type = button.dataset.type;
+                    
+                    document.querySelectorAll('.transaction').forEach(transaction => {
+                        if (type === 'luxury') {
+                            const desc = transaction.querySelector('div span:first-of-type').textContent.toLowerCase();
+                            const isLuxury = desc.includes('rickowens') || 
+                                           desc.includes('balenciaga') || 
+                                           desc.includes('louisvuitton') ||
+                                           desc.includes('gucci') ||
+                                           desc.includes('farfetch') ||
+                                           desc.includes('net-a-porter');
+                            transaction.style.display = isLuxury ? 'flex' : 'none';
+                        } else if (year === 'all' || transaction.dataset.year === year) {
+                            transaction.style.display = 'flex';
+                        } else {
+                            transaction.style.display = 'none';
+                        }
+                    });
+                });
+            });
+    
+            // Transaction click handler
+            document.addEventListener('click', (e) => {
+                if (e.target.closest('.transaction')) {
+                    const transaction = e.target.closest('.transaction');
+                    const existingDetail = transaction.nextElementSibling;
+                    
+                    if (existingDetail?.classList.contains('transaction-detail')) {
+                        existingDetail.remove();
+                        return;
+                    }
+    
+                    const detailElement = document.createElement('div');
+                    detailElement.classList.add('transaction-detail');
+                    detailElement.innerHTML = `
+                        <h4>Transaktionsdetails</h4>
+                        <p>Beschreibung: ${transaction.querySelector('div span:first-of-type').textContent}</p>
+                        <p>Datum: ${transaction.querySelector('.date').textContent}</p>
+                        <p>Betrag: ${transaction.querySelector('span:last-child').textContent}</p>
+                        <p>Buchungsnummer: ${Math.random().toString(36).substr(2, 9).toUpperCase()}</p>
+                    `;
+                    
+                    transaction.after(detailElement);
+                    detailElement.style.display = 'block';
+                }
+            });
+        </script>
+    </body>
+    </html>
